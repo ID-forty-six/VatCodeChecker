@@ -1,0 +1,22 @@
+{
+    "name": "id-forty-six/vatcodechecker",
+    "description": "checks if VAT code is valid",
+    "type": "package",
+    "require": {
+        "php": ">=5.3.0",
+        "id-forty-six/curlwrapper": "*"
+    },
+    "authors": [
+        {
+            "name": "ID Forty Six",
+            "homepage": "https://sendinn.com"
+        }
+    ],
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "idfortysix\\vatcodechecker\\": ""
+        }
+    }
+}
