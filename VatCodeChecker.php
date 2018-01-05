@@ -1,6 +1,6 @@
 <?php
 
-namespace idfortysix\curlwrapper;
+namespace idfortysix\vatcodechecker;
 
 use idfortysix\curlwrapper\Robot;
 use idfortysix\curlwrapper\Parser;
@@ -9,7 +9,7 @@ use idfortysix\curlwrapper\Parser;
  * Check if VAT code is valid
  */
 
-class VatCodes {
+class VatCodeChecker {
     
     /*
 	 * Checks if PVM is valid
