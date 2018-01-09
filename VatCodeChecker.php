@@ -13,6 +13,7 @@ class VatCodeChecker {
     
     /*
 	 * Checks if PVM is valid
+	 * $country objektas arba stdClass, kur butinos properties id ir eu
 	 */
     public function check_VAT($country, $vat_number)
     {
@@ -21,7 +22,7 @@ class VatCodeChecker {
         {
             return $this->check_CH_VAT($vat_number);
         }
-        // if user is from EU countries
+        // is from EU country
         elseif ($country->eu == 1)
         {
             return $this->check_EU_VAT($country->id, $vat_number);
@@ -83,8 +84,10 @@ EOF;
 	 */
     private function check_EU_VAT($country_id, $vat_number)
     {
-        $vat_number = $this->format_VAT($vat_number);
-        
+		// kai kada PVM kodas turi raides, pvz Austrijoje
+		// reikia papildomai repleisinti kai pirmos dvi raides - salies kodas
+        $vat_number = preg_replace(['/\W/iu', "/^$country_id/iu"], '', strtoupper($vat_number) );
+		
         // EU VAT checking system URL
         $url = "http://ec.europa.eu/taxation_customs/vies/vatResponse.html";
             
@@ -101,7 +104,7 @@ EOF;
             'action' => 'check',
             'check' => 'verify',
         ];
-            
+        
         $robot = new Robot;
             
         // Get source code
@@ -119,7 +122,7 @@ EOF;
         
         $parser = new Parser($page);
         
-        if ($parser->getStrings($pattern)) 
+        if ($parser->getStrings($pattern))
         {
             return true;
         }
@@ -131,18 +134,11 @@ EOF;
     
     
     /*
-	 * get only numbers from VAT code and delete all spaces
+	 * format Switzerland (CH) VAT code
 	 */
-    private function format_VAT($vat_number) 
+    private function format_CH_VAT($vat_number)
     {
-        return preg_replace('/[\D\s]/iu', '', $vat_number);
-    }
-    
-    
-    // format Switzerland (CH) VAT code
-    private function format_CH_VAT($vat_number) 
-    {
-        $vat_number = $this->format_VAT($vat_number);
+        $vat_number = preg_replace('/\D/iu', '', $vat_number);
         
         // create CHE-123.456.789 VAT format
         $vat_number = substr_replace(substr_replace($vat_number, ".", 3, 0), ".", 7, 0);
