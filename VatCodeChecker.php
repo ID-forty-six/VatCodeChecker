@@ -10,6 +10,14 @@ use idfortysix\curlwrapper\Parser;
  */
 
 class VatCodeChecker {
+	
+	/*
+	 * is VAT exempt applicable for the following country
+	 */
+	public function is_applicable($country)
+	{
+		return ($country->id == 'CH' || $country->eu == 1);
+	}
     
     /*
 	 * Checks if PVM is valid
