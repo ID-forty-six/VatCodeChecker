@@ -210,7 +210,7 @@ EOF;
     /*
 	 * format Norway (NO) VAT code
 	 */
-    public function format_NO_VAT($vat_number)
+    private function format_NO_VAT($vat_number)
     {
         $vat_number = preg_replace('/\D/iu', '', $vat_number);
 
