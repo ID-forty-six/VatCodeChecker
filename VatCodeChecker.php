@@ -33,7 +33,7 @@ class VatCodeChecker {
         //checks if user is from Norway
         elseif ($country->id == 'NO')
         {
-            return $this->check_NO_VAT($var_number);
+            return $this->check_NO_VAT($vat_number);
         }
         // is from EU country
         elseif ($country->eu == 1)
@@ -119,7 +119,7 @@ EOF;
 
         $vat_number = $this->format_NO_VAT_withSpaces($vat_number);
 
-        $patern_active = <<<EOF
+        $pattern_active = <<<EOF
 <b>Organisasjonsnummer: </b>
 </p>
 </div>
@@ -210,7 +210,7 @@ EOF;
     /*
 	 * format Norway (NO) VAT code
 	 */
-    private function format_NO_VAT($vat_number)
+    public function format_NO_VAT($vat_number)
     {
         $vat_number = preg_replace('/\D/iu', '', $vat_number);
 
