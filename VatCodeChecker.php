@@ -10,13 +10,13 @@ use idfortysix\curlwrapper\Parser;
  */
 
 class VatCodeChecker {
-	
+
 	/*
 	 * is VAT exempt applicable for the following country
 	 */
 	public function is_applicable($country)
 	{
-		return ($country->id == 'CH' || $country->eu == 1);
+		return ($country->id == 'CH' || $country->eu == 1 || $country->id == "NO");
 	}
     
     /*
@@ -29,6 +29,11 @@ class VatCodeChecker {
         if ($country->id == 'CH')
         {
             return $this->check_CH_VAT($vat_number);
+        }
+        //checks if user is from Norway
+        elseif ($country->id == 'NO')
+        {
+            return $this->check_NO_VAT($var_number);
         }
         // is from EU country
         elseif ($country->eu == 1)
@@ -85,6 +90,56 @@ EOF;
         {
             return false;
         }
+    }
+
+    /*
+	 * Validate Norway (NO) VAT
+	 */
+    private function check_NO_VAT($vat_number)
+    {
+        $vat_number = $this->format_NO_VAT($vat_number);
+
+        //NO VAT checking system URL
+        $url = "http://w2.brreg.no/enhet/sok/detalj.jsp?orgnr=".$vat_number;
+
+        $robot = new Robot;
+
+        //get source code
+        try
+        {
+            $page = $robot->followLocation()->curlPage($url);
+        }
+        catch(\Exeption $ex)
+
+        {
+            return false;
+        }
+
+        //Page source paterns for VAT validation
+
+        $vat_number = $this->format_NO_VAT_withSpaces($vat_number);
+
+        $patern_active = <<<EOF
+<b>Organisasjonsnummer: </b>
+</p>
+</div>
+<div class="col-sm-8">
+<p>$vat_number</p>       
+EOF;
+
+        //find patterns is source code
+
+        $parser = new Parser($page);
+
+        if ($parser->getStrings($pattern_active)) 
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
     }
     
     /*
@@ -152,6 +207,23 @@ EOF;
         $vat_number = substr_replace(substr_replace($vat_number, ".", 3, 0), ".", 7, 0);
         return "CHE-".$vat_number;
     }
-    
+    /*
+	 * format Norway (NO) VAT code
+	 */
+    private function format_NO_VAT($vat_number)
+    {
+        $vat_number = preg_replace('/\D/iu', '', $vat_number);
 
+        return $vat_number;
+    }
+
+    /*
+	 * format Norway (NO) VAT code
+	 */
+    private function format_NO_VAT_withSpaces($vat_number)
+    {
+        $vat_number = substr_replace(substr_replace($vat_number, " ", 3, 0), " ", 7, 0);
+
+        return $vat_number;
+    }
 }
