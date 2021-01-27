@@ -4,7 +4,8 @@
     "type": "package",
     "require": {
         "php": ">=5.3.0",
-        "id-forty-six/curlwrapper": "*"
+        "id-forty-six/curlwrapper": "*",
+        "ph-7/eu-vat-validator": "^2.7"
     },
     "authors": [
         {
