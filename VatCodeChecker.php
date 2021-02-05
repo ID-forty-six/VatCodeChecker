@@ -25,17 +25,17 @@ class VatCodeChecker {
         // Checks if user is from Switzerland
         if ($country->id == 'CH')
         {
-            $checker = resolve(CHVatChecker::class);
+            $checker = new CHVatChecker;
         }
         //checks if user is from Norway
         elseif ($country->id == 'NO')
         {
-            $checker = resolve(NOVatChecker::class);
+            $checker = new NOVatChecker;
         }
         // is from EU country
         elseif ($country->eu == 1)
         {
-            $checker = resolve(EUVatChecker::class);
+            $checker = new EUVatChecker;
         }
         else
         {
