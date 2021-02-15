@@ -41,6 +41,12 @@ class VatCodeChecker {
         {
             return null;
         }
+
+        // Greece VIES naudoja kitoki country code
+        if($country->id == "GR")
+        {
+            $country->id = 'EL';
+        }
         
         return $checker->check_VAT($country->id, $vat_number, $w_info);
     }
