@@ -2,6 +2,7 @@
 
 namespace idfortysix\vatcodechecker;
 
+use Exception;
 
 /**
  * Check if VAT code is valid
@@ -48,6 +49,15 @@ class VatCodeChecker {
             $country->id = 'EL';
         }
         
-        return $checker->check_VAT($country->id, $vat_number, $w_info);
+        try 
+        {
+            $result = $checker->check_VAT($country->id, $vat_number, $w_info);
+        } 
+        catch (Exception $ex) 
+        {
+            $result = null;
+        }
+
+        return $result;
     }
 }
